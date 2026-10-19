@@ -1,0 +1,80 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+# Dimensions de la grille (besoin d'une grille assez grande, ex: 300x300)
+N = 125
+Tableau = np.zeros((N, N), dtype=int)
+Tableaub = np.zeros((N, N), dtype=int)
+
+"""
+def ajouter_fumeur(grid, x, y):
+    
+    # Matrice du motif du Switch Engine
+    switch_engine = np.array([
+        [0, 1, 1, 0, 0, 0],
+        [1, 0, 0, 0, 1, 0],
+        [1, 0, 0, 1, 0, 1],
+        [0, 1, 1, 1, 1, 0]
+    ])
+    h, w = switch_engine.shape
+    grid[x:x + h, y:y + w] = switch_engine
+
+
+# On place le fumeur dans la grille (par exemple vers le centre ou en haut)
+ajouter_fumeur(Tableau, 50, 50)
+
+plt.close('all')
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# Affichage en noir et blanc strict
+im = ax.imshow(Tableau, cmap='binary', vmin=0, vmax=1, origin='lower', interpolation='nearest')
+ax.set_title("Jeu de la Vie - Le 'Fumeur' (Block-laying Switch Engine)")
+"""
+Tableau[4:44,23:40]=1
+Tableaub[4:44,23:40]=1
+
+plt.close('all')
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# Affichage en noir et blanc strict
+im = ax.imshow(Tableau, cmap='binary', vmin=0, vmax=1, origin='lower', interpolation='nearest')
+def GOL(frame):
+    global Tableau, Tableaub
+
+    for i in range(1, N - 1):
+        for j in range(1, N - 1):
+            voisines = (
+                    Tableau[i - 1][j - 1] + Tableau[i - 1][j] + Tableau[i - 1][j + 1] +
+                    Tableau[i][j - 1] + Tableau[i][j + 1] +
+                    Tableau[i + 1][j - 1] + Tableau[i + 1][j] + Tableau[i + 1][j + 1]
+            )
+
+            # Règles du Jeu de la Vie
+            if voisines == 3:
+                Tableaub[i][j] = 1
+            elif Tableau[i][j] == 1 and voisines == 2:
+                Tableaub[i][j] = 1
+
+            else:
+                Tableaub[i][j] = 0
+    Tableaub[0,:]=0
+    Tableaub[-1,:]=0
+    Tableaub[:,0]=0
+    Tableaub[:,-1]=0
+    # Copie de la génération
+    Tableau = Tableaub.copy()
+
+    im.set_data(Tableau)
+    return [im]
+
+
+ani = animation.FuncAnimation(
+    fig, GOL,
+    frames=1000,
+    interval=10,  # Vitesse de l'animation
+    blit=True,
+    repeat=False
+)
+
+plt.show()
