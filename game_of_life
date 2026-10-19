@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.figure as pltf
+import matplotlib.animation as animation
+#game of life de 1000 par 1000
+N=1000
+Tableau = np.array([[0 for _ in range(N)] for _ in range(N)])
+Tableaub = np.array([[0 for _ in range(N)] for _ in range(N)])
+
+
+"""règles
+
+if Tableau[i-1][j-1]+Tableau[i-1][j]+Tableau[i-1][j+1]+Tableau[i][j-1]+Tableau[i][j+1]+Tableau[i+1][j-1]+Tableau[i+1][j]+Tableau[i+1][j+1]==3:
+    Tableau[i][j]=1
+elif Tableau[i][j]==1 and Tableau[i-1][j-1]+Tableau[i-1][j]+Tableau[i-1][j+1]+Tableau[i][j-1]+Tableau[i][j+1]+Tableau[i+1][j-1]+Tableau[i+1][j]+Tableau[i+1][j+1]==2:
+    Tableau[i][j]=1
+else:
+    Tableau[i][j]=0
+
+
+"""
+
+plt.close('all')
+fig, ax = plt.subplots(figsize=(16, 9))
+norm = plt.Normalize(vmin=0, vmax=1)
+ax.imshow(Tableaub, zorder=1)
+im = ax.imshow(np.zeros((N, N)), norm=norm, extent=(0, N, 0, N), zorder=1)
+
+def GOL(frame):
+    for i in range(N-1):
+        for j in range(N-1):
+            if Tableau[i-1][j-1]+Tableau[i-1][j]+Tableau[i-1][j+1]+Tableau[i][j-1]+Tableau[i][j+1]+Tableau[i+1][j-1]+Tableau[i+1][j]+Tableau[i+1][j+1]==3:
+                Tableau[i][j]=1
+            elif Tableau[i][j]==1 and Tableau[i-1][j-1]+Tableau[i-1][j]+Tableau[i-1][j+1]+Tableau[i][j-1]+Tableau[i][j+1]+Tableau[i+1][j-1]+Tableau[i+1][j]+Tableau[i+1][j+1]==2:
+                Tableau[i][j]=1
+            else:
+                Tableau[i][j]=0
+    im.set_data(Tableau)
+    return [im]
+
+
+ani = animation.FuncAnimation(fig, GOL, frames=1000, interval=10, blit=True, repeat=False)
+plt.show()
+#print(Tableau)
